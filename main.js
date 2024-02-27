@@ -52,3 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     fetchMealList();
 });
+
+// 2. Загрузите при помощи fetch данные из API и получите их в виде JSON
+
+fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Сетевой ответ не был успешным');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.log('Возникла проблема с вашим запросом fetch' , error);
+       
+    });
