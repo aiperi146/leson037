@@ -31,3 +31,29 @@ li:hover {
     text-decoration: underline;
 }
 
+.container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.blocks {
+    display: flex;
+    flex-direction: column;
+}
+
+.block {
+    margin-bottom: 20px;
+}
+
+.block img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.details {
+    width: 50%;
+    border: 1px solid #ccc;
+    padding: 20px;
+}

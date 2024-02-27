@@ -69,3 +69,38 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
         console.log('Возникла проблема с вашим запросом fetch' , error);
        
     });
+  //3.   Выведите в одну из колонок на странице три блока, в каждом из которых должна отображаться картинка и текст, соответствующие данным для трёх первых элементов массива из ответа JSON. Оформление блоков - на ваше усмотрение.
+  fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Сетевой ответ не был успешным');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const blocksContainer = document.getElementById('blocks');
+        const detailsContainer = document.getElementById('details');
+        
+        
+        for (let i = 0; i < 3; i++) {
+            const block = document.createElement('div');
+            block.classList.add('block');
+            const meal = data.meals[i];
+            block.innerHTML = `
+                <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                <p>${meal.strMeal}</p>
+            `;
+           
+            block.addEventListener('click', () => {
+                detailsContainer.innerHTML = `
+                    <h2>${meal.strMeal}</h2>
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                    <p>${meal.strInstructions}</p>
+                `;
+            });
+            blocksContainer.appendChild(block);
+        }
+    })
+    .catch(error => {
+        console.log('Возникла проблема с вашим запросом fetch', error);
+    });
