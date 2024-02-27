@@ -146,3 +146,65 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
     .catch(error => {
         console.log('Возникла проблема с вашим запросом fetch', error);
     });
+//5. Добавьте на страницу кнопку, по нажатию на которую в колонку с блоками добавляется ещё один аналогичный блок (для 4-го элемента из JSON-ответа, затем для 5-го и т.д.). Если в ответе кончились элементы, кнопка должна перестать нажиматься. Для новых добавленных блоков должно так же работать клик, отображающий в другой колонке подробную информацию о них. 
+
+const blocksContainer = document.getElementById('blocks');
+const detailsContainer = document.getElementById('details');
+const addBlockBtn = document.getElementById('addBlockBtn');
+
+let currentBlockIndex = 0;
+let mealsData = [];
+
+
+function addBlock(meal) {
+    const block = document.createElement('div');
+    block.classList.add('block');
+    block.innerHTML = `
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+        <p>${meal.strMeal}</p>
+    `;
+    block.addEventListener('click', () => {
+        detailsContainer.innerHTML = '';
+        const details = document.createElement('div');
+        details.innerHTML = `
+            <h2>${meal.strMeal}</h2>
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+            <p>${meal.strInstructions}</p>
+        `;
+        detailsContainer.appendChild(details);
+    });
+    blocksContainer.appendChild(block);
+}
+
+function loadAndCreateBlocks() {
+    fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Сетевой ответ не был успешным');
+            }
+            return response.json();
+        })
+        .then(data => {
+            mealsData = data.meals;
+            
+            for (let i = 0; i < 3; i++) {
+                addBlock(mealsData[i]);
+            }
+        })
+        .catch(error => {
+            console.log('Возникла проблема с вашим запросом fetch', error);
+        });
+}
+
+
+loadAndCreateBlocks();
+
+
+addBlockBtn.addEventListener('click', () => {
+    currentBlockIndex++;
+    if (currentBlockIndex < mealsData.length) {
+        addBlock(mealsData[currentBlockIndex]);
+    } else {
+        addBlockBtn.disabled = true;
+    }
+});
