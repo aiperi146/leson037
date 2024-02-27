@@ -104,3 +104,45 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
     .catch(error => {
         console.log('Возникла проблема с вашим запросом fetch', error);
     });
+// 4. При клику на каждый из блоков вторая колонка должна отображать расширенную информацию о соответствующем элементе (например, крупную картинку, заголовок и описание). При клике на другой элемент вместо уже отображённой информации должна отобразиться новая. 
+
+fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=salad')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Сетевой ответ не был успешным');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const blocksContainer = document.getElementById('blocks');
+        const detailsContainer = document.getElementById('details');
+        
+        
+        for (let i = 0; i < 3; i++) {
+            const block = document.createElement('div');
+            block.classList.add('block');
+            const meal = data.meals[i];
+            block.innerHTML = `
+                <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                <p>${meal.strMeal}</p>
+            `;
+            
+            block.addEventListener('click', () => {
+               
+                detailsContainer.innerHTML = '';
+               
+                const details = document.createElement('div');
+                details.innerHTML = `
+                    <h2>${meal.strMeal}</h2>
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                    <p>${meal.strInstructions}</p>
+                `;
+                
+                detailsContainer.appendChild(details);
+            });
+            blocksContainer.appendChild(block);
+        }
+    })
+    .catch(error => {
+        console.log('Возникла проблема с вашим запросом fetch', error);
+    });
